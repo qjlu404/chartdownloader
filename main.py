@@ -1,4 +1,5 @@
 from selenium import webdriver
+from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
@@ -16,19 +17,19 @@ def get(furl):
     print(driver.title)
     try:
         links = WebDriverWait(driver, 10).until(
-            EC.presence_of_element_located((By.ID, "myDynamicElement"))
+            EC.presence_of_element_located((By.PARTIAL_LINK_TEXT, "PDF"))
         )
-    except:
-        print("there was an error")
+    except NoSuchElementException:
+        print("ERROR: CD1")
         driver.quit()
         exit()
     finally:
         driver.quit()
 
-    print(len(links))
-    for items in links:
-        sleep(10)
-        print(items)
+    print(links.text)
+    #for items in links:
+    #    sleep(10)
+    #    print(items)
 
 
 def enter():
