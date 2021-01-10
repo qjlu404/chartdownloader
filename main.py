@@ -1,35 +1,59 @@
 from selenium import webdriver
 from selenium.common.exceptions import NoSuchElementException
-from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
-from time import sleep
 
+# from selenium.webdriver.common.by import By
+# from selenium.webdriver.support.ui import WebDriverWait
+# from selenium.webdriver.support import expected_conditions as EC
 PATH = "C:\Program Files (x86)\chromedriver.exe"
-url = "https://airnav.com/airport/"
+url = "https://www.faa.gov/air_traffic/flight_info/aeronav/digital_products/dtpp/search/results/?cycle=2014&ident="
+errormsg = "Something Went Wrong!"
+noLoop = False
 
-noloop = False
+
+def getout():
+    pass
 
 
 def get(furl):
-    driver = webdriver.Chrome(PATH)
-    driver.get(furl)
-    print(driver.title)
-    try:
-        links = WebDriverWait(driver, 10).until(
-            EC.presence_of_element_located((By.PARTIAL_LINK_TEXT, "PDF"))
-        )
-    except NoSuchElementException:
-        print("ERROR: CD1")
-        driver.quit()
-        exit()
-    finally:
-        driver.quit()
+    global links, driver
 
-    print(links.text)
-    #for items in links:
-    #    sleep(10)
-    #    print(items)
+    try:
+        driver = webdriver.Chrome(PATH)
+    except:
+        print("CD1")
+        getout()
+
+    else:
+        driver.get(furl)
+
+        try:
+            print(driver.title)
+
+        except:
+            print("cd2")
+            getout()
+
+        else:
+
+            try:
+                links = driver.find_elements_by_xpath("//table[@id = 'resultsTable']//tbody/tr/td/a")
+
+                a = []
+                b = []
+                for element in links:
+                    a.append(element.text)
+                    b.append(element.get_attribute("href"))
+
+                for oa in a:
+                    for ob in b:
+                        print(oa + "\t" + ob)
+                        break
+
+            except NoSuchElementException:
+                print("Selenium: No such element.")
+            finally: driver.quit()
+
+
 
 
 def enter():
@@ -49,7 +73,7 @@ def enter():
             get(furl)
 
 
-if not noloop:
+if not noLoop:
     enter()
 else:
     exit()
