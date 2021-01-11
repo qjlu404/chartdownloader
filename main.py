@@ -1,60 +1,32 @@
-from selenium import webdriver
-from selenium.common.exceptions import NoSuchElementException
-
-# from selenium.webdriver.common.by import By
-# from selenium.webdriver.support.ui import WebDriverWait
-# from selenium.webdriver.support import expected_conditions as EC
-PATH = "C:\Program Files (x86)\chromedriver.exe"
+from urllib.request import urlopen
+from lxml import etree
 url = "https://www.faa.gov/air_traffic/flight_info/aeronav/digital_products/dtpp/search/results/?cycle=2014&ident="
 errormsg = "Something Went Wrong!"
 noLoop = False
 
 
-def getout():
+def downloadChart(name, site):
     pass
 
 
-def get(furl):
-    global links, driver
+def getdata(furl):
+    response = urlopen(furl)
+    htmlparser = etree.HTMLParser()
+    tree = etree.parse(response, htmlparser)
+    nameshtml = tree.xpath("//table[@id='resultsTable']/tbody/tr/td/a")
+    linkshtml = tree.xpath("//table[@id='resultsTable']/tbody/tr/td/a/@href")
+    names = []
+    links = []
 
-    try:
-        driver = webdriver.Chrome(PATH)
-    except:
-        print("CD1")
-        getout()
+    for name in nameshtml:
+        print(name.text)
+        names.append(name.text)
+    for link in linkshtml:
+        print(link)
+        links.append(link)
 
-    else:
-        driver.get(furl)
-
-        try:
-            print(driver.title)
-
-        except:
-            print("cd2")
-            getout()
-
-        else:
-
-            try:
-                links = driver.find_elements_by_xpath("//table[@id = 'resultsTable']//tbody/tr/td/a")
-
-                a = []
-                b = []
-                for element in links:
-                    a.append(element.text)
-                    b.append(element.get_attribute("href"))
-
-                for oa in a:
-                    for ob in b:
-                        print(oa + "\t" + ob)
-                        break
-
-            except NoSuchElementException:
-                print("Selenium: No such element.")
-            finally: driver.quit()
-
-
-
+    print("\n\n\n\n", names[2])
+    print(links[2])
 
 def enter():
     loop = True
@@ -70,7 +42,7 @@ def enter():
         else:
             furl = url + icao
             loop = False
-            get(furl)
+            getdata(furl)
 
 
 if not noLoop:
