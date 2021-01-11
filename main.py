@@ -3,17 +3,22 @@ from urllib.request import urlopen
 from lxml import etree
 import wget
 import os
-
 url = "https://www.faa.gov/air_traffic/flight_info/aeronav/digital_products/dtpp/search/results/?cycle=2014&ident="
-errormsg = "Something Went Wrong!"
 noLoop = False
 
 
 
-def dload(name, link, type, icao):
-    ffile = type + "." + name
+def dload(name, link, type, icao, choice):
+    if choice == 'N':
+        ffile = name
+    else:
+        ffile = type + "." + name
+
     print(ffile)
     wget.download(link, './' + icao + "/" + ffile + ".pdf" )
+#    images = convert_from_path('example.pdf')
+#    for img in images:
+#        img.save('output.jpg', 'JPEG')
 
 
 def getdata(furl, icao):
@@ -27,6 +32,7 @@ def getdata(furl, icao):
     names = []
     links = []
     types = []
+    choice = input('Save as PNG?')
 
     for name in nameshtml:
         names.append(name.text)
@@ -48,7 +54,7 @@ def getdata(furl, icao):
             types.append('INF')
 
     for i, j, k in zip(names, links, types):
-        dload(i, j, k, icao)
+        dload(i, j, k, icao, choice)
 
 
 def enter():
