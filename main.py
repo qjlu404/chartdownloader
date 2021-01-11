@@ -10,22 +10,16 @@ noLoop = False
 
 
 def dload(name, link, type, icao, choice):
-    global ffile
-    name.replace("A/FD", "A-FD")
-    print(name)
     if choice.upper() == 'N':
-        ffile = name.replace("A/FD", "A-FD")
+        ffile = name.replace("/", "-")
         wget.download(link, './' + icao + "/" + ffile + ".pdf" )
         
     else:
-        ffile = type + "." + name.replace("A/FD", "A-FD")
+        ffile = type + "." + name.replace("/", "-")
         wget.download(link, './' + icao + "/" + ffile + ".pdf" )
         images = convert_from_path('./' + icao + "/" + ffile + ".pdf")
         for img in images:
-            img.save(ffile, 'PNG')
-    
-    
-
+            img.save(ffile + ".png", 'PNG')
     print(ffile)
     
 
@@ -53,7 +47,7 @@ def getdata(furl, icao):
             types.append('APP')
 
         elif info.text == 'DP':
-            types.append('DPP')
+            types.append('DEP')
 
         elif info.text == 'STAR':
             types.append('ARR')
