@@ -1,6 +1,7 @@
 from pdf2image import convert_from_path
 from urllib.request import urlopen
 from lxml import etree
+from time import sleep
 import wget
 import os
 url = "https://www.faa.gov/air_traffic/flight_info/aeronav/digital_products/dtpp/search/results/?cycle=2014&ident="
@@ -9,14 +10,21 @@ noLoop = False
 
 
 def dload(name, link, type, icao, choice):
-    if choice == 'N':
-        ffile = name
-    else:
-        ffile = type + "." + name        
+    global ffile
+    name.replace("A/FD", "A-FD")
+    print(name)
+    if choice.upper() == 'N':
+        ffile = name.replace("A/FD", "A-FD")
         wget.download(link, './' + icao + "/" + ffile + ".pdf" )
-    images = convert_from_path('./' + icao + "/" + ffile + ".pdf")
-    for img in images:
-        img.save('ffile', 'PNG')
+        
+    else:
+        ffile = type + "." + name.replace("A/FD", "A-FD")
+        wget.download(link, './' + icao + "/" + ffile + ".pdf" )
+        images = convert_from_path('./' + icao + "/" + ffile + ".pdf")
+        for img in images:
+            img.save(ffile, 'PNG')
+    
+    
 
     print(ffile)
     
@@ -32,7 +40,7 @@ def getdata(furl, icao):
     names = []
     links = []
     types = []
-    choice = input('Save as PNG?')
+    choice = input('Save for Aerobask planes?(y/n): ')
 
     for name in nameshtml:
         names.append(name.text)
@@ -54,6 +62,7 @@ def getdata(furl, icao):
             types.append('INF')
 
     for i, j, k in zip(names, links, types):
+        i.replace("/", "-")
         dload(i, j, k, icao, choice)
 
 
@@ -76,7 +85,7 @@ def enter():
         else:
             furl = url + icao + "&page=" + page
             loop = False
-            path = icao
+            path = icao.lower()
             if not os.path.exists(path):
                 os.makedirs(path)
             getdata(furl, icao)
