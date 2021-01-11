@@ -10,16 +10,19 @@ noLoop = False
 
 
 def dload(name, link, type, icao, choice):
-    if choice.upper() == 'N':
+    if choice.lower() == 'n':
         ffile = name.replace("/", "-")
         wget.download(link, './' + icao + "/" + ffile + ".pdf" )
         
     else:
         ffile = type + "." + name.replace("/", "-")
-        wget.download(link, './' + icao + "/" + ffile + ".pdf" )
-        images = convert_from_path('./' + icao + "/" + ffile + ".pdf")
+        
+        wget.download(link, icao + "/" + ffile + ".pdf" )
+        images = convert_from_path(icao + "/" + ffile + ".pdf")
+
         for img in images:
-            img.save(ffile + ".png", 'PNG')
+            img.save("png" + icao + "/" +ffile + ".png", 'PNG')
+
     print(ffile)
     
 
@@ -35,6 +38,11 @@ def getdata(furl, icao):
     links = []
     types = []
     choice = input('Save for Aerobask planes?(y/n): ')
+
+    if  choice.lower() == 'y':
+        
+        if not os.path.exists("./png" + icao.upper() + "/"):
+            os.makedirs("./png" + icao.upper() + "/")
 
     for name in nameshtml:
         names.append(name.text)
@@ -57,7 +65,7 @@ def getdata(furl, icao):
 
     for i, j, k in zip(names, links, types):
         i.replace("/", "-")
-        dload(i, j, k, icao, choice)
+        dload(i, j, k, icao.upper(), choice)
 
 
 def enter():
@@ -79,7 +87,7 @@ def enter():
         else:
             furl = url + icao + "&page=" + page
             loop = False
-            path = icao.lower()
+            path = icao.upper()
             if not os.path.exists(path):
                 os.makedirs(path)
             getdata(furl, icao)
