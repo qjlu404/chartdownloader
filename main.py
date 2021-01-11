@@ -5,7 +5,7 @@ errormsg = "Something Went Wrong!"
 noLoop = False
 
 
-def downloadChart(name, site):
+def downloadchart(name, site):
     pass
 
 
@@ -19,14 +19,14 @@ def getdata(furl):
     links = []
 
     for name in nameshtml:
-        print(name.text)
         names.append(name.text)
     for link in linkshtml:
-        print(link)
         links.append(link)
+    items = dict(zip(names, links))
 
-    print("\n\n\n\n", names[2])
-    print(links[2])
+    for item in items:
+        print(item, '->', items[item])
+
 
 def enter():
     loop = True
