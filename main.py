@@ -24,7 +24,7 @@ def dload(name, link, type, icao, choice):
 
         for img in images:
             img.save(icao + "-png/" +ffile + ".png", 'PNG')
-
+	print(ffile)
     
     
 
