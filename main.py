@@ -13,6 +13,8 @@ def dload(name, link, type, icao, choice):
     if choice.lower() == 'n':
         ffile = name.replace("/", "-")
         wget.download(link, './' + icao + "/" + ffile + ".pdf" )
+
+        print(ffile)
         
     else:
         ffile = type + "." + name.replace("/", "-")
@@ -21,9 +23,9 @@ def dload(name, link, type, icao, choice):
         images = convert_from_path(icao + "/" + ffile + ".pdf")
 
         for img in images:
-            img.save("png" + icao + "/" +ffile + ".png", 'PNG')
+            img.save(icao + "-png/" +ffile + ".png", 'PNG')
 
-    print(ffile)
+    
     
 
 def getdata(furl, icao):
@@ -41,8 +43,8 @@ def getdata(furl, icao):
 
     if  choice.lower() == 'y':
         
-        if not os.path.exists("./png" + icao.upper() + "/"):
-            os.makedirs("./png" + icao.upper() + "/")
+        if not os.path.exists("./" + icao.upper() + "-png/"):
+            os.makedirs("./" + icao.upper() + "-png/")
 
     for name in nameshtml:
         names.append(name.text)
@@ -64,8 +66,7 @@ def getdata(furl, icao):
             types.append('INF')
 
     for i, j, k in zip(names, links, types):
-        i.replace("/", "-")
-        dload(i, j, k, icao.upper(), choice)
+        dload(i.replace(".", "_"), j, k, icao.upper(), choice)
 
 
 def enter():
