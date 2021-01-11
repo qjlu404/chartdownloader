@@ -12,14 +12,14 @@ def dload(name, link, type, icao, choice):
     if choice == 'N':
         ffile = name
     else:
-        ffile = type + "." + name
+        ffile = type + "." + name        
+        wget.download(link, './' + icao + "/" + ffile + ".pdf" )
+    images = convert_from_path('./' + icao + "/" + ffile + ".pdf")
+    for img in images:
+        img.save('ffile', 'PNG')
 
     print(ffile)
-    wget.download(link, './' + icao + "/" + ffile + ".pdf" )
-#    images = convert_from_path('example.pdf')
-#    for img in images:
-#        img.save('output.jpg', 'JPEG')
-
+    
 
 def getdata(furl, icao):
     response = urlopen(furl)
