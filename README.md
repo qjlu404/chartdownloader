@@ -7,3 +7,5 @@ type `pip install urllib3 lxml wheel wget pdf2image` or replace pip with pip3 if
 then go to the same directory as the python script and type `python main.py` or `python3 main.py` or any way that works for you.
 
      install poppler with these instuctions: https://pdf2image.readthedocs.io/en/latest/installation.html#installing-poppler
+     
+     idk why they made it as hard as possible to get poppler to work on windows but idk you're gonna have to find a way.
