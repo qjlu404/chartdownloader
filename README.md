@@ -1,6 +1,6 @@
 # chartdownloader
 
-You can use this software (chartdownloader) and distribute it (chartdownloader) but just give credit just to say thanks at least.
+You can use this software (chartdownloader) and distribute it (chartdownloader) but just give credit just to say thanks at least when you distribute it.
 
 
 make sure you have python3 and pip installed.
