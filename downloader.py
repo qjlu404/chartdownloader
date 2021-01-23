@@ -31,31 +31,26 @@ def dload(name, link, type, icao, choice):
 
 def getdata(furl, icao, choice):
     response = urlopen(furl)
-    print(".")
     htmlparser = etree.HTMLParser()
-    print(".")
     tree = etree.parse(response, htmlparser)
-    print(".")
     infohtml = tree.xpath("//table[@id='resultsTable']/tbody/tr/td[last()-2]")
     nameshtml = tree.xpath("//table[@id='resultsTable']/tbody/tr/td/a")
     linkshtml = tree.xpath("//table[@id='resultsTable']/tbody/tr/td/a/@href")
-    print(".")
 
     names = []
     links = []
     types = []
-    print(".")
     if choice.lower() == 'y':
 
         if not os.path.exists("./" + icao.upper() + "-png/"):
             os.makedirs("./" + icao.upper() + "-png/")
-    print(".")
+
     for name in nameshtml:
         names.append(name.text)
-    print(".")
+
     for link in linkshtml:
         links.append(link)
-    print(".")
+
     for info in infohtml:
         if info.text == 'IAP':
             types.append('APP')
@@ -69,8 +64,6 @@ def getdata(furl, icao, choice):
         else:
             types.append('INF')
 
-
-    print(".")
     for i, j, k in zip(names, links, types):
         dload(i.replace(".", "_"), j, k, icao.upper(), choice)
 

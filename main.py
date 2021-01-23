@@ -1,4 +1,4 @@
-import gui
+from gui import main as gui
 
-gui.main()
+gui()
 print("\n\nDone!")
