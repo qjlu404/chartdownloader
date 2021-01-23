@@ -18,10 +18,15 @@ def dload(name, link, type, icao, choice):
     else:
         ffile = type + "." + name.replace("/", "-")
         wget.download(link, icao + "/" + ffile + ".pdf")
-        images = convert_from_path(icao + "/" + ffile + ".pdf")
-        for img in images:
-            img.save(icao + "-png/" + ffile + ".png", 'PNG')
-        print(ffile)
+        if os.name == 'nt':
+            images = convert_from_path(icao + "/" + ffile + ".pdf", poppler_path=r"./poppler-21.01.0/Library/bin")
+            for img in images:
+                img.save(icao + "-png/" + ffile + ".png", 'PNG')
+            print(ffile)
+        else:
+            images = convert_from_path(icao + "/" + ffile + ".pdf")
+            for img in images:
+                img.save(icao + "-png/" + ffile + ".png", 'PNG')
 
 
 def getdata(furl, icao, choice):
@@ -63,6 +68,8 @@ def getdata(furl, icao, choice):
 
         else:
             types.append('INF')
+
+
     print(".")
     for i, j, k in zip(names, links, types):
         dload(i.replace(".", "_"), j, k, icao.upper(), choice)
