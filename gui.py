@@ -1,10 +1,10 @@
-import tkinter
+#import tkinter
 from downloader import enter as dl
 
 
 def main():
-    window = tkinter.Tk()
-    window.mainloop()
+#    window = tkinter.Tk()
+#    window.mainloop()
 
     condit = True
     while condit:
