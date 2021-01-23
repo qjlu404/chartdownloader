@@ -14,7 +14,7 @@ def main():
         if len(icao) != 4:
             print('ICAO must be four characters')
         elif len(choice) != 1:
-            print('Aerobask choice can only be one character')
+            print('Aerobask option Must be a single character')
         elif choice.lower() != "y":
             print('Must be Y/N')
         elif choice.lower() != 'n':
