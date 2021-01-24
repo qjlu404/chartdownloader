@@ -5,3 +5,5 @@ You may need to manually install the modules: `tkinter urllib3 lxml wheel wget p
  Run main.py and the rest is pretty straightfoward. 
  
  If you're on linux/mac you'll have to install Poppler manually.
+ 
+ if you have github click the star button as a thank you :)
