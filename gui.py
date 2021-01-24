@@ -1,28 +1,26 @@
-#import tkinter
+import tkinter
 from downloader import enter as dl
 
 
-def main():
-#    window = tkinter.Tk()
-#    window.mainloop()
-
-    condit = True
-    while condit:
-        icao = input("enter ICAO: ")
-        choice = input('Save for Aerobask aircraft?(y/n): ')
-
-        if len(icao) != 4:
-            print('ICAO must be four characters')
-        elif len(choice) != 1:
-            print('Aerobask option Must be a single character')
-        elif choice.lower() != "y":
-            print('Must be Y/N')
-        elif choice.lower() != 'n':
-            print('Must be Y/N')
-        else:
-            condit = False
+def convert(icao, choice):
     n = 1
     while n < 5:
-        dl(icao, str(n), choice)
+        dl(icao, n, choice)
         n += 1
+
+
+def main():
+
+    window = tkinter.Tk()
+    window.title("ChartDownloader")
+    icao = tkinter.Entry(window)
+    window.configure(bg='grey')
+    tkinter.Label(window, bg='grey', fg='white', text="Enter ICAO: ", font="Verdana 10 bold").grid(row=1, sticky=tkinter.W)
+    choice = tkinter.IntVar()
+    tkinter.Radiobutton(window, bg='grey', text="PDF format", padx=20, variable=choice, value=2).grid(sticky=tkinter.W)
+    tkinter.Radiobutton(window, bg='grey', text="Aerobask format", padx=20, variable=choice, value=1).grid(sticky=tkinter.W)
+    tkinter.Button(window, bg='grey', text='download', command=lambda: convert(icao.get(), choice.get())).grid(row=4, column=1, sticky=tkinter.W, pady=4)
+    icao.grid(row=1, column=1, sticky=tkinter.W)
+    tkinter.Button(window, bg='grey', text='Quit', command=window.quit).grid(row=4, column=0, sticky=tkinter.W, pady=4)
+    window.mainloop()
 

@@ -10,23 +10,25 @@ noLoop = False
 
 
 def dload(name, link, type, icao, choice):
-    if choice.lower() == 'n':
-        ffile = name.replace("/", "-")
-        wget.download(link, './' + icao + "/" + ffile + ".pdf")
-        print(ffile)
-
-    else:
+    if choice == 1:
         ffile = type + "." + name.replace("/", "-")
         wget.download(link, icao + "/" + ffile + ".pdf")
         if os.name == 'nt':
             images = convert_from_path(icao + "/" + ffile + ".pdf", poppler_path=r"./poppler-21.01.0/Library/bin")
             for img in images:
                 img.save(icao + "-png/" + ffile + ".png", 'PNG')
-            print(ffile)
         else:
             images = convert_from_path(icao + "/" + ffile + ".pdf")
             for img in images:
                 img.save(icao + "-png/" + ffile + ".png", 'PNG')
+
+    if choice == 2:
+        ffile = name.replace("/", "-")
+        wget.download(link, './' + icao + "/" + ffile + ".pdf")
+
+    else: print('error')
+
+
 
 
 def getdata(furl, icao, choice):
@@ -40,8 +42,7 @@ def getdata(furl, icao, choice):
     names = []
     links = []
     types = []
-    if choice.lower() == 'y':
-
+    if choice == 1:
         if not os.path.exists("./" + icao.upper() + "-png/"):
             os.makedirs("./" + icao.upper() + "-png/")
 
@@ -69,9 +70,9 @@ def getdata(furl, icao, choice):
 
 
 def enter(icao, page, choice):
-    furl = url + icao + "&page=" + page
-    loop = False
-    path = icao.upper()
-    if not os.path.exists(path):
-        os.makedirs(path)
-    getdata(furl, icao, choice)
+    print(choice)
+    print(icao)
+    furl = url + icao + "&page=" + str(page)
+    if not os.path.exists(icao.upper()):
+        os.makedirs(icao.upper())
+    getdata(furl, icao.upper(), choice)
