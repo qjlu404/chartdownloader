@@ -5,6 +5,7 @@ import wget
 import os
 
 
+
 url = 'https://www.faa.gov/air_traffic/flight_info/aeronav/digital_products/dtpp/search/results/?cycle=2014&ident='
 noLoop = False
 
@@ -13,6 +14,7 @@ def dload(name, link, type, icao, choice):
     if choice == 1:
         ffile = type + "." + name.replace("/", "-")
         wget.download(link, icao + "/" + ffile + ".pdf")
+        print(ffile)
         if os.name == 'nt':
             images = convert_from_path(icao + "/" + ffile + ".pdf", poppler_path=r"./poppler-21.01.0/Library/bin")
             for img in images:
@@ -21,12 +23,11 @@ def dload(name, link, type, icao, choice):
             images = convert_from_path(icao + "/" + ffile + ".pdf")
             for img in images:
                 img.save(icao + "-png/" + ffile + ".png", 'PNG')
+            print(ffile)
 
     if choice == 2:
         ffile = name.replace("/", "-")
         wget.download(link, './' + icao + "/" + ffile + ".pdf")
-
-    else: print('error')
 
 
 

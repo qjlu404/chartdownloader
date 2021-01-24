@@ -1,17 +1,23 @@
 import tkinter
+from tkinter import messagebox
 from downloader import enter as dl
 
 
-def convert(icao, choice):
-    n = 1
-    while n < 5:
-        dl(icao, n, choice)
-        n += 1
+
 
 
 def main():
 
     window = tkinter.Tk()
+
+    def convert(aicao, achoice):
+        tkinter.messagebox.showinfo("Alert", "Click OK to download - Program may become unresponsive for some time")
+        n = 1
+        while n < 5:
+            dl(aicao, n, achoice)
+            n += 1
+        tkinter.messagebox.showinfo("Alert", "Finished!")
+
     window.title("ChartDownloader")
     icao = tkinter.Entry(window)
     window.configure(bg='grey')
