@@ -33,8 +33,8 @@ def getdata(furl, icao, choice):
     htmlparser = etree.HTMLParser()
     tree = etree.parse(response, htmlparser)
     infohtml = tree.xpath("//table[@id='resultsTable']/tbody/tr/td[last()-2]")
-    nameshtml = tree.xpath("//table[@id='resultsTable']/tbody/tr/td/a")
-    linkshtml = tree.xpath("//table[@id='resultsTable']/tbody/tr/td/a/@href")
+    nameshtml = tree.xpath("//table[@id='resultsTable']/tbody/tr/td[8]/a")
+    linkshtml = tree.xpath("//*[@id='resultsTable']/tbody/tr/td[8]/a/@href")
 
     names = []
     links = []
