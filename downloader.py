@@ -10,8 +10,9 @@ noLoop = False
 
 
 def dload(name, link, type, icao, choice):
-    ffile = name.replace("/", "-")
+
     if choice == 1:
+        ffile = type + "." + name.replace("/", "-")
         wget.download(link, icao + "/" + ffile + ".pdf")
         if os.name == 'nt':
             images = convert_from_path(icao + "/" + ffile + ".pdf", poppler_path=r"./poppler-21.01.0/Library/bin")
@@ -25,6 +26,7 @@ def dload(name, link, type, icao, choice):
                 img.save(icao + "/" + icao + '/' + ffile + ".png", 'PNG')
 
     if choice == 2:
+        ffile = name.replace("/", "-")
         wget.download(link, './' + icao + "/" + ffile + ".pdf")
 
 
