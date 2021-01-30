@@ -1,18 +1,23 @@
 import tkinter
 from tkinter import messagebox
 from downloader import enter as dl
+import threading
 
 
 def main():
-
     window = tkinter.Tk()
 
     def convert(aicao, achoice):
         tkinter.messagebox.showinfo("Alert", "Click OK to download - Program may become unresponsive for some time")
-        n = 1
-        while n < 8:
-            dl(aicao, n, achoice)
-            n += 1
+        t1 = threading.Thread(target=dl, args=(aicao, 1, achoice))
+        t2 = threading.Thread(target=dl, args=(aicao, 2, achoice))
+        t3 = threading.Thread(target=dl, args=(aicao, 3, achoice))
+        t1.start()
+        t2.start()
+        t3.start()
+        t1.join()
+        t2.join()
+        t3.join()
         tkinter.messagebox.showinfo("Alert", "Finished!")
 
     window.title("ChartDownloader")
@@ -21,7 +26,6 @@ def main():
     window.configure(bg='grey')
     tkinter.Label(window, bg='grey', fg='white', text="Enter ICAO: ", font="Verdana 10 bold").grid(row=1, sticky=tkinter.W)
     choice = tkinter.IntVar()
-    
     choice.set(1)
     tkinter.Radiobutton(window, bg='grey', text="PDF format", padx=20, variable=choice, value=2).grid(sticky=tkinter.W)
     tkinter.Radiobutton(window, bg='grey', text="Aerobask (PNG) format", padx=20, variable=choice, value=1).grid(sticky=tkinter.W)
