@@ -12,6 +12,7 @@ import os
 url = 'https://www.faa.gov/air_traffic/flight_info/aeronav/digital_products/dtpp/search/results/?cycle=2014&ident='
 
 
+# Downloads the file using the given information
 def dload(name, link, type, icao, choice):
 
     if choice == 1:
@@ -33,6 +34,7 @@ def dload(name, link, type, icao, choice):
         print("8===>" + ffile)
 
 
+# Gets website info and puts everything in the right format so it can be used by the dload function
 def getdata(furl, icao, choice):
     response = urlopen(furl)
     htmlparser = etree.HTMLParser()
@@ -70,6 +72,7 @@ def getdata(furl, icao, choice):
         dload(i.replace(".", " "), j, k, icao.upper(), choice)
 
 
+# changes the url as needed.
 def enter(icao, page, choice):
     print(icao)
     furl = url + icao + "&page=" + str(page)
