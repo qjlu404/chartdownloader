@@ -16,11 +16,12 @@ url = 'https://www.faa.gov/air_traffic/flight_info/aeronav/digital_products/dtpp
 def dload(name, link, type, icao, choice):
 
     if choice == 1:
-        ffile = type + "." + name.replace("/", "-")
+        ffile = name.replace("/", "-")
         wget.download(link, icao + "/" + ffile + ".pdf")
         print("8===>" + ffile)
         if os.name == 'nt':
             images = convert_from_path(icao + "/" + ffile + ".pdf", poppler_path=r"./poppler-21.01.0/Library/bin")
+            ffile = type + "." + name.replace("/", "-")
             for img in images:
                 img.save(icao + "/" + icao + '/' + ffile + ".png", 'PNG')
         else:
