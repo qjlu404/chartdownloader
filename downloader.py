@@ -5,19 +5,19 @@ if __name__ == '__main__':
 from pdf2image import convert_from_path
 from urllib.request import urlopen
 from urllib.request import urlretrieve as download
+import threading
 from lxml import etree
 import os
-
 
 url = 'https://www.faa.gov/air_traffic/flight_info/aeronav/digital_products/dtpp/search/results/?cycle=2014&ident='
 
 
-def path(icao, type):
-    if type == 'APP':
+def path(icao, typee):
+    if typee == 'APP':
         finalpath = icao + "/Approach Plates"
-    elif type == 'DEP':
+    elif typee == 'DEP':
         finalpath = icao + "/SIDS"
-    elif type == 'ARR':
+    elif typee == 'ARR':
         finalpath = icao + "/STARS"
     else:
         finalpath = icao + "/Information"
@@ -26,18 +26,16 @@ def path(icao, type):
 
 
 # Downloads the file using the given information
-def dload(name, link, type, icao, choice):
+def dload(name, link, typeinfo, icao, choice):
     if choice == 1:
-        ffile = type + "." + name.replace("/", "-")
-        print(path(icao, type) + "/" + name.replace("/", "-") + ".pdf")
-        print("8===>" + ffile)
-        if not os.path.isdir("./" + path(icao, type)):
-            os.makedirs("./" + path(icao, type))
+        ffile = typeinfo + "." + name.replace("/", "-")
+        if not os.path.isdir(path(icao, typeinfo)):
+            os.makedirs(path(icao, typeinfo))
 
-        download(link, path(icao, type) + "/" + name.replace("/", "-") + ".pdf")
+        download(link, path(icao, typeinfo) + "/" + name.replace("/", "-") + ".pdf")
 
         if os.name == 'nt':
-            images = convert_from_path(path(icao, type) + "/" + name.replace("/", "-") + ".pdf", poppler_path=r"./poppler-21.01.0/Library/bin")
+            images = convert_from_path(path(icao, typeinfo) + "/" + name.replace("/", "-") + ".pdf", poppler_path=r"./poppler-21.01.0/Library/bin")
             i = 1
             for img in images:
 
@@ -48,33 +46,40 @@ def dload(name, link, type, icao, choice):
                 i += 1
 
         else:
-            images = convert_from_path(path(icao, type) + "/" + name.replace("/", "-") + ".pdf")
+            images = convert_from_path(path(icao, typeinfo) + "/" + name.replace("/", "-") + ".pdf")
             i = 1
             for img in images:
 
                 if i != 1:
-                    img.save(icao + "/" + icao + '/' + ffile + 'PG-' + str(i) + ".png", 'PNG')
+                    img.save(icao + "/" + icao + '/' + ffile + ' (PG-' + str(i) + ").png", 'PNG')
                 else:
                     img.save(icao + "/" + icao + '/' + ffile + ".png", 'PNG')
                 i += 1
 
+        print("8===>" + ffile)
+
     if choice == 2:
         ffile = name.replace("/", "-")
-        fpath = "./" + path(icao, type) + "/" + name.replace("/", "-") + ".pdf"
-        print("8===>" + ffile)
-        print(fpath)
-        if not os.path.isdir("./" + path(icao, type)):
-            os.makedirs("./" + path(icao, type))
+        fpath = "./" + path(icao, typeinfo) + "/" + name.replace("/", "-") + ".pdf"
+        if not os.path.isdir("./" + path(icao, typeinfo)):
+            os.makedirs("./" + path(icao, typeinfo))
         download(link, fpath)
+        print("8===>" + ffile)
 
 
 # Gets website info and puts everything in the right format so it can be used by the dload function
 def getdata(furl, icao, choice):
-    def sendtodownload(anames, alinks, atypes, aicao, achoice):
+    threads = []
+
+    def dlloop(anames, alinks, atypes, aicao, achoice):
         for i, j, k in zip(anames, alinks, atypes):
             if not os.path.exists(aicao + "/" + path(aicao, k)):
                 os.makedirs(aicao + "/" + path(aicao, k))
-            dload(i.replace(".", " "), j, k, aicao, achoice)
+            th = threading.Thread(target=dload, args=(i.replace(".", " "), j, k, aicao, achoice))
+            th.start()
+            threads.append(th)
+        for thread in threads:
+            thread.join()
 
     response = urlopen(furl)
     htmlparser = etree.HTMLParser()
@@ -109,7 +114,7 @@ def getdata(furl, icao, choice):
         if not os.path.exists(icao + "/" + icao):
             os.makedirs(icao + "/" + icao)
 
-    sendtodownload(names, links, types, icao, choice)
+    dlloop(names, links, types, icao, choice)
 
 
 # changes the url as needed.
