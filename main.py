@@ -7,6 +7,7 @@ from time import perf_counter
 
 def main():
     window = tkinter.Tk()
+    window.resizable(False, False)
 
     def final(aicao, achoice):
         tkinter.messagebox.showinfo("Alert", "Click OK to download - Program may become unresponsive for some time")
@@ -18,15 +19,18 @@ def main():
             t.start()
             threads.append(t)
             i += 1
-
         for thread in threads:
             thread.join()
-
         finish = perf_counter()
-        tkinter.messagebox.showinfo("Done!", "Finished in " + str(round(finish-start, 1)) + ' seconds')
+        tkinter.messagebox.showinfo("Done!", "Finished in " + str(round(finish - start, 1)) + ' seconds')
 
     window.title("ChartDownloader")
     window.configure(bg='grey')
+
+    def finalthreading(bicao, bchoice):
+        t1 = threading.Thread(target=final, args=(bicao, bchoice))
+        t1.start()
+
     i = tkinter.StringVar(window, value='KSAT')
     tkinter.Label(window,
                   bg='grey',
@@ -34,6 +38,7 @@ def main():
                   text="Enter ICAO: ",
                   font="Verdana 10 bold")\
         .grid(row=1, sticky=tkinter.W)
+
     icao = tkinter.Entry(window, textvariable=i)
     icao.grid(row=1, column=1, sticky=tkinter.W)
     choice = tkinter.IntVar()
@@ -56,8 +61,8 @@ def main():
 
     tkinter.Button(window,
                    bg='grey',
-                   text='download',
-                   command=lambda: final(icao.get(), choice.get()))\
+                   text='Download',
+                   command=lambda: finalthreading(icao.get(), choice.get()))\
         .grid(row=4, column=1, sticky=tkinter.W, pady=4)
 
     tkinter.Button(window,

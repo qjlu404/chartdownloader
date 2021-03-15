@@ -8,13 +8,14 @@ from urllib.request import urlretrieve as download
 import threading
 from lxml import etree
 import os
+import config
 
-url = 'https://www.faa.gov/air_traffic/flight_info/aeronav/digital_products/dtpp/search/results/?cycle=2014&ident='
+URL = 'https://www.faa.gov/air_traffic/flight_info/aeronav/digital_products/dtpp/search/results/?cycle=' + str(config.chartVersion) + '&ident='
 
 
 def path(icao, typee):
     if typee == 'APP':
-        finalpath = icao + "/Approach Plates"
+        finalpath = icao + "/Instrument Approaches"
     elif typee == 'DEP':
         finalpath = icao + "/SIDS"
     elif typee == 'ARR':
@@ -29,11 +30,14 @@ def path(icao, typee):
 def dload(name, link, typeinfo, icao, choice):
     if choice == 1:
         ffile = typeinfo + "." + name.replace("/", "-")
-        if not os.path.isdir(path(icao, typeinfo)):
-            os.makedirs(path(icao, typeinfo))
+        try:
+            if not os.path.isdir(path(icao, typeinfo)):
+                os.makedirs(path(icao, typeinfo))
+        except FileExistsError:
+            if not os.path.isdir(path(icao, typeinfo)):
+                os.makedirs(path(icao, typeinfo))
 
         download(link, path(icao, typeinfo) + "/" + name.replace("/", "-") + ".pdf")
-
         if os.name == 'nt':
             images = convert_from_path(path(icao, typeinfo) + "/" + name.replace("/", "-") + ".pdf", poppler_path=r"./poppler-21.01.0/Library/bin")
             i = 1
@@ -61,8 +65,12 @@ def dload(name, link, typeinfo, icao, choice):
     if choice == 2:
         ffile = name.replace("/", "-")
         fpath = "./" + path(icao, typeinfo) + "/" + name.replace("/", "-") + ".pdf"
-        if not os.path.isdir("./" + path(icao, typeinfo)):
-            os.makedirs("./" + path(icao, typeinfo))
+        try:
+            if not os.path.isdir(path(icao, typeinfo)):
+                os.makedirs(path(icao, typeinfo))
+        except FileExistsError:
+            if not os.path.isdir(path(icao, typeinfo)):
+                os.makedirs(path(icao, typeinfo))
         download(link, fpath)
         print("8===>" + ffile)
 
@@ -120,5 +128,5 @@ def getdata(furl, icao, choice):
 # changes the url as needed.
 def enter(icao, page, choice):
     print(icao)
-    furl = url + icao + "&page=" + str(page)
+    furl = URL + icao + "&page=" + str(page)
     getdata(furl, icao.upper(), choice)
