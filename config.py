@@ -1,3 +1,3 @@
-chartVersion = 2102
+chartVersion = 2306
 sitePages = 3
 configbg = 'grey'
